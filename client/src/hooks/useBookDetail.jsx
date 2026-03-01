@@ -8,9 +8,8 @@ const useBookDetail = (bookId, authorId) => {
   useEffect(() => {
     const controller = new AbortController();
     const searchBookSummary = async () => {
-      console.log("BookDetail page accessed: ", id);
-      if (!bookId) return;
-      console.log("BookDetail page accessed after ID: ", id);
+      if (!bookId || !authorId) return;
+      console.log("BookDetail page accessed:", { bookId, authorId });
 
       try {
         const bookResponse = await fetch(
@@ -31,7 +30,7 @@ const useBookDetail = (bookId, authorId) => {
         console.log(data);
         setResults(data);
       } catch (error) {
-        if (error.name != "AbortError") {
+        if (error.name !== "AbortError") {
           console.error("Search for book summary failed: ", error);
         }
       }

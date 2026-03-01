@@ -11,12 +11,10 @@ const BookDetails = () => {
   //Custom hooks
   const bookDetail = useBookDetail(bookId, authorId);
   console.log("Book Detail:", bookDetail);
-  const {
-    description,
-    title,
-    author: { personal_name },
-    covers,
-  } = bookDetail;
+  const description = bookDetail?.description;
+  const title = bookDetail?.title ?? "";
+  const personal_name = bookDetail?.author?.personal_name ?? "Unknown Author";
+  const covers = bookDetail?.covers ?? [];
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#fff",
