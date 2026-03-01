@@ -23,7 +23,7 @@ const useBookSearch = (debouncedText) => {
           `${API_URL}/api/books/search?q=${encodeURIComponent(debouncedText)}`,
           {
             signal: controller.signal,
-          },
+          }
         );
         const data = await response.json();
         const docs = Array.isArray(data?.docs) ? data.docs : [];
