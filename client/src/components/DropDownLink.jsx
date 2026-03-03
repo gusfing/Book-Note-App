@@ -66,12 +66,12 @@ const DropDownLink = (props) => {
           }}
         />
       </Box>
-      <div style={{ paddingLeft: "2px" }}>
-        <div style={{ fontWeight: "bold" }}>{title}</div>
-        <div style={{ fontWeight: "lighter", fontSize: "0.9rem" }}>
-          by {Array.isArray(author_name) ? author_name[0] : "Unknown Author"}
-        </div>
-      </div>
+      <Box sx={{ paddingLeft: "2px" }}>
+        <Box sx={{ fontWeight: "bold" }}>{title}</Box>
+        <Box sx={{ fontWeight: "lighter", fontSize: "0.9rem" }}>
+          by {author_name}
+        </Box>
+      </Box>
     </Link>
   );
 };
