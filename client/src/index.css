@@ -125,21 +125,28 @@ h3,
 
 .book-meta__container {
   display: flex;
-  flex: 1 1 auto;
-  padding: 20px;
-  justify-content: center;
-  gap: 20px;
+  padding: 10px;
+  margin: 10px 0;
   font-size: 0.9em;
 }
 
 .book-meta__item {
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 5px 30px;
+  padding: 9px;
+  margin: 0 4px;
+  flex-grow: 1;
   text-align: center;
 }
+
 .book-meta__item span {
-  display: block;
   font-weight: lighter;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+}
+.book-meta__item p {
+  margin: 0;
+}
+.book-meta__item a {
+  font-family: "Inter", sans-serif;
+  text-decoration: none;
 }

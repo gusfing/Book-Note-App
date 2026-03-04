@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import useBookDetail from "../hooks/useBookDetail";
 // MUI components
 import { styled } from "@mui/material/styles";
@@ -10,26 +10,35 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const BookDetails = () => {
-  const { bookId, authorId } = useParams();
+  const { bookId } = useParams();
+  const [searchParams] = useSearchParams();
+  const authorId = searchParams.get("author");
+  const editionId = searchParams.get("edition");
   const [isExpanded, setIsExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
   const descriptionRef = useRef(null);
 
   //Custom hooks
-  const bookDetail = useBookDetail(bookId, authorId);
-  console.log("Book Detail:", bookDetail);
+  const bookDetail = useBookDetail(bookId, authorId, editionId);
 
   const {
-    description = "No description available",
     title = "Untitled",
-    author: { personal_name = "Unknown Author" } = {},
     covers: rawCovers = [],
     revision = 0,
+    author: { personal_name = "Unknown Author" } = {},
+    edition: {
+      publishers = [],
+      publish_date = "NA",
+      number_of_pages = null,
+    } = {},
+    languages: { name: bookLanguage = "English" } = {},
   } = bookDetail || {};
-  // const description = bookDetail?.description;
-  // const title = bookDetail?.title ?? "";
-  // const personal_name = bookDetail?.author?.personal_name ?? "Unknown Author";
-  // const covers = bookDetail?.covers ?? [];
+
+  const rawDescription = bookDetail?.description;
+  const descriptionText =
+    typeof rawDescription === "string"
+      ? rawDescription
+      : rawDescription?.value || "No description available";
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#fff",
@@ -42,20 +51,13 @@ const BookDetails = () => {
     }),
   }));
 
-  function extractBookDescription() {
-    return typeof description === "string"
-      ? description
-      : (description?.value ?? "No description available.");
-  }
-  const descriptiontext = extractBookDescription();
-
   useEffect(() => {
     const el = descriptionRef.current;
     if (!el) return;
     setIsExpanded(false);
     // Check if the content overflows the container
     setCanExpand(el.scrollHeight > el.clientHeight);
-  }, [descriptiontext]);
+  }, [descriptionText]);
 
   return (
     <Box sx={{ flexGrow: 1, padding: "20px" }}>
@@ -70,7 +72,7 @@ const BookDetails = () => {
             ref={descriptionRef}
             className={`book-description my-3 ${isExpanded ? "book-description--expanded" : ""}`}
           >
-            {descriptiontext}
+            {descriptionText}
           </p>
           {canExpand && (
             <button
@@ -89,10 +91,28 @@ const BookDetails = () => {
             </button>
           )}
           <Box className="book-meta__container">
-            <Box className="book-meta__item">Publish Date</Box>
-            <Box className="book-meta__item">Publisher</Box>
-            <Box className="book-meta__item">Language</Box>
-            <Box className="book-meta__item">Pages</Box>
+            <Box className="book-meta__item">
+              <span>Publish Date</span>
+              <p>{publish_date}</p>
+            </Box>
+            <Box className="book-meta__item">
+              <span>Publisher</span>
+              <a
+                href={`https://openlibrary.org/publishers/${encodeURIComponent(publishers[0] || "Unknown Publisher")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <p>{publishers[0] || "Unknown Publisher"}</p>
+              </a>
+            </Box>
+            <Box className="book-meta__item">
+              <span>Language</span>
+              <p>{bookLanguage}</p>
+            </Box>
+            <Box className="book-meta__item">
+              <span>Pages</span>
+              <p>{number_of_pages || "NA"}</p>
+            </Box>
           </Box>
         </Grid>
 
