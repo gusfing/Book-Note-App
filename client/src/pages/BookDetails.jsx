@@ -20,6 +20,7 @@ const BookDetails = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [canExpand, setCanExpand] = useState(false);
   const descriptionRef = useRef(null);
+  const [hoveredStar, setHoveredStar] = useState(0);
 
   //Custom hooks
   const bookDetail = useBookDetail(bookId, authorId, editionId);
@@ -67,7 +68,7 @@ const BookDetails = () => {
       <Grid container className="rounded text-body-emphasis" spacing={1}>
         <Grid
           className="p-3 border rounded d-flex flex-column"
-          size={{ lg: 9 }}
+          size={{ xs: 12, lg: 9 }}
         >
           <Box className="book-description__wrapper">
             {/* Book title and author section */}
@@ -118,7 +119,7 @@ const BookDetails = () => {
               <span>Publisher</span>
               <a
                 href={`https://openlibrary.org/publishers/${encodeURIComponent(
-                  publishers[0] || "Unknown Publisher",
+                  publishers[0] || "Unknown Publisher"
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -152,30 +153,33 @@ const BookDetails = () => {
               alt="book-cover-main"
             />
           </Box>
-          <Box className="d-flex gap-1 mb-1 pb-3 border-bottom background-color-transparent">
-            <button className="border-0 mt-2 background-color-transparent">
-              {Array.from({ length: 5 }, (_, index) => (
+          <Box className="rating-star__container">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                className={`star-${star}`}
+                onMouseEnter={() => setHoveredStar(star)}
+                onMouseLeave={() => setHoveredStar(0)}
+              >
                 <StarIcon
-                  className={`star-${index + 1}`}
                   sx={{
-                    color: "#bdbdbd",
+                    color: star <= hoveredStar ? "#ffc107" : "#bdbdbd",
                     height: "32px",
                     width: "32px",
                     cursor: "pointer",
                   }}
                 />
-              ))}
-            </button>
+              </button>
+            ))}
           </Box>
           <Box className="d-flex gap-2">
             <Button sx={{ color: "#414141" }} href="#">
-              <p>
+              <p style={{ margin: 0 }}>
                 <EditNoteIcon sx={{ height: "40px", width: "40px" }} />
                 Note
               </p>
             </Button>
             <Button sx={{ color: "#414141" }} href="#">
-              <p>
+              <p style={{ margin: 0 }}>
                 <StarIcon sx={{ height: "40px", width: "40px" }} />
                 Rate
               </p>
