@@ -1,26 +1,16 @@
-import { useEffect, useState, useRef } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import useBookDetail from "../hooks/useBookDetail";
+import BookCoverGrid from "../components/BookCoverGrid";
+import BookMetaGrid from "../components/BookMetaGrid";
 // MUI components
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import Button from "@mui/material/Button";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import StarIcon from "@mui/icons-material/Star";
 
 const BookDetails = () => {
   const { bookId } = useParams();
   const [searchParams] = useSearchParams();
   const authorId = searchParams.get("author");
   const editionId = searchParams.get("edition");
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [canExpand, setCanExpand] = useState(false);
-  const descriptionRef = useRef(null);
-  const [hoveredStar, setHoveredStar] = useState(0);
 
   //Custom hooks
   const bookDetail = useBookDetail(bookId, authorId, editionId);
@@ -44,148 +34,22 @@ const BookDetails = () => {
       ? rawDescription
       : rawDescription?.value || "No description available";
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: (theme.vars ?? theme).palette.text.secondary,
-    ...theme.applyStyles("dark", {
-      backgroundColor: "#1A2027",
-    }),
-  }));
-
-  useEffect(() => {
-    const el = descriptionRef.current;
-    if (!el) return;
-    setIsExpanded(false);
-    // Check if the content overflows the container
-    setCanExpand(el.scrollHeight > el.clientHeight);
-  }, [descriptionText]);
-
   return (
     <Box sx={{ flexGrow: 1, padding: "20px" }}>
       <Grid container className="rounded text-body-emphasis" spacing={1}>
-        <Grid
-          className="p-3 border rounded d-flex flex-column"
-          size={{ xs: 12, lg: 9 }}
-        >
-          <Box className="book-description__wrapper">
-            {/* Book title and author section */}
-            <Box>
-              <h1 className="display-6 fst-italic">{title}</h1>{" "}
-              <p>
-                by{" "}
-                <a href={`https://openlibrary.org/authors/${authorId}`}>
-                  {personal_name}
-                </a>
-                <span style={{ fontWeight: "lighter" }}> ({revision})</span>
-              </p>
-            </Box>
-            {/* Book description section */}
-            <Box>
-              <p
-                ref={descriptionRef}
-                className={`book-description ${
-                  isExpanded ? "book-description--expanded" : ""
-                }`}
-              >
-                {descriptionText}
-              </p>
-              {canExpand && (
-                <button
-                  className="read-more-btn"
-                  onClick={() => setIsExpanded((prev) => !prev)}
-                >
-                  {isExpanded ? (
-                    <>
-                      Read Less <KeyboardArrowUpIcon />
-                    </>
-                  ) : (
-                    <>
-                      Read More <KeyboardArrowDownIcon />
-                    </>
-                  )}
-                </button>
-              )}
-            </Box>
-          </Box>
-          <Box className="book-meta__container">
-            <Box className="book-meta__item">
-              <span>Publish Date</span>
-              <p>{publish_date}</p>
-            </Box>
-            <Box className="book-meta__item">
-              <span>Publisher</span>
-              <a
-                href={`https://openlibrary.org/publishers/${encodeURIComponent(
-                  publishers[0] || "Unknown Publisher"
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p>{publishers[0] || "Unknown Publisher"}</p>
-              </a>
-            </Box>
-            <Box className="book-meta__item">
-              <span>Language</span>
-              <p>{bookLanguage}</p>
-            </Box>
-            <Box className="book-meta__item">
-              <span>Pages</span>
-              <p>{number_of_pages || "NA"}</p>
-            </Box>
-          </Box>
-        </Grid>
-
-        <Grid
-          className="p-3 d-flex flex-column border rounded align-items-center"
-          size={{ xs: 12, lg: 3 }}
-        >
-          <Box className="cover-image__container">
-            <img
-              className="cover-image__item"
-              src={
-                rawCovers?.length > 0
-                  ? `https://covers.openlibrary.org/b/id/${rawCovers[0]}-M.jpg`
-                  : "https://dummyimage.com/150x200/cccccc/000000&text=No+Cover"
-              }
-              alt="book-cover-main"
-            />
-          </Box>
-          <Box className="rating-star__container">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                className={`star-${star}`}
-                onMouseEnter={() => setHoveredStar(star)}
-                onMouseLeave={() => setHoveredStar(0)}
-              >
-                <StarIcon
-                  sx={{
-                    color: star <= hoveredStar ? "#ffc107" : "#bdbdbd",
-                    height: "32px",
-                    width: "32px",
-                    cursor: "pointer",
-                  }}
-                />
-              </button>
-            ))}
-          </Box>
-          <Box className="d-flex gap-2">
-            <Button sx={{ color: "#414141" }} href="#">
-              <p style={{ margin: 0 }}>
-                <EditNoteIcon sx={{ height: "40px", width: "40px" }} />
-                Note
-              </p>
-            </Button>
-            <Button sx={{ color: "#414141" }} href="#">
-              <p style={{ margin: 0 }}>
-                <StarIcon sx={{ height: "40px", width: "40px" }} />
-                Rate
-              </p>
-            </Button>
-          </Box>
-        </Grid>
+        {/* Book metadata grid (title, author, etc.) */}
+        <BookMetaGrid
+          title={title}
+          personal_name={personal_name}
+          revision={revision}
+          descriptionText={descriptionText}
+          publish_date={publish_date}
+          publishers={publishers}
+          bookLanguage={bookLanguage}
+          number_of_pages={number_of_pages}
+        />
+        {/* Book cover grid (book cover, rating, note button, etc.) */}
+        <BookCoverGrid rawCovers={rawCovers} />
       </Grid>
     </Box>
   );
