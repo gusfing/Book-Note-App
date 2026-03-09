@@ -9,7 +9,7 @@ const AddNoteModal = (props) => {
 
   return (
     <Box>
-      <Tooltip title="Delete">
+      <Tooltip title="Add your book notes" placement="right">
         <Button sx={{ color: "#414141" }} onClick={handleOpen}>
           <EditNoteIcon sx={{ height: "40px", width: "40px" }} />
           Note
