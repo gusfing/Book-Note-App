@@ -49,7 +49,11 @@ const BookDetails = () => {
           number_of_pages={number_of_pages}
         />
         {/* Book cover grid (book cover, rating, note button, etc.) */}
-        <BookCoverGrid rawCovers={rawCovers} />
+        <BookCoverGrid
+          rawCovers={rawCovers}
+          bookTitle={title}
+          bookAuthor={personal_name}
+        />
       </Grid>
     </Box>
   );

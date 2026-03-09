@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import AddNoteModal from "../components/AddNoteModal";
+// MUI components
+import { Box, Grid } from "@mui/material";
+//import EditNoteIcon from "@mui/icons-material/EditNote";
 import StarIcon from "@mui/icons-material/Star";
 
 const BookCoverGrid = (props) => {
@@ -44,18 +44,13 @@ const BookCoverGrid = (props) => {
         ))}
       </Box>
       <Box className="d-flex gap-2">
-        <Button sx={{ color: "#414141" }} href="#">
-          <p style={{ margin: 0 }}>
-            <EditNoteIcon sx={{ height: "40px", width: "40px" }} />
-            Note
-          </p>
-        </Button>
-        <Button sx={{ color: "#414141" }} href="#">
+        <AddNoteModal bookTitle={props.bookTitle} bookAuthor={props.bookAuthor} />
+        {/* <Button sx={{ color: "#414141" }} href="#">
           <p style={{ margin: 0 }}>
             <StarIcon sx={{ height: "40px", width: "40px" }} />
             Rate
           </p>
-        </Button>
+        </Button> */}
       </Box>
     </Grid>
   );
