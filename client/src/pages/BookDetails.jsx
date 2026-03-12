@@ -47,6 +47,7 @@ const BookDetails = () => {
           publishers={publishers}
           bookLanguage={bookLanguage}
           number_of_pages={number_of_pages}
+          authorId={authorId}
         />
         {/* Book cover grid (book cover, rating, note button, etc.) */}
         <BookCoverGrid
