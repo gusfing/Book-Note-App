@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AddNoteModal from "../components/AddNoteModal";
+import usePostBookNote from "../hooks/usePostBookNote";
 // MUI components
 import { Box, Grid } from "@mui/material";
 //import EditNoteIcon from "@mui/icons-material/EditNote";
@@ -7,6 +8,18 @@ import StarIcon from "@mui/icons-material/Star";
 
 const BookCoverGrid = (props) => {
   const [hoveredStar, setHoveredStar] = useState(0);
+
+  const { postBookNote, loading, success, error } = usePostBookNote();
+  async function onSubmit(params) {
+    const response = await postBookNote(params);
+    if (success) {
+      console.log("Note posted successfully:", response);
+      // Add success snackbar
+    } else {
+      console.error("Failed to post note:", error);
+      //Add failure snackbar
+    }
+  }
 
   return (
     <Grid
@@ -47,6 +60,7 @@ const BookCoverGrid = (props) => {
         <AddNoteModal
           bookTitle={props.bookTitle}
           bookAuthor={props.bookAuthor}
+          onSubmit={onSubmit}
         />
       </Box>
     </Grid>
