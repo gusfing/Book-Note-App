@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import bookRoutes from "./routes/bookRoutes.js";
+import router from "./routes/bookRoutes.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -9,7 +9,8 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-app.use("/api/books", bookRoutes);
+//api endpoint for routing client requests
+app.use("/api/books", router);
 
 // Test database connection
 //await db.query("SELECT 1")
