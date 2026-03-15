@@ -53,7 +53,9 @@ const BookDetails = () => {
         <BookCoverGrid
           rawCovers={rawCovers}
           bookTitle={title}
-          bookAuthor={personal_name}
+          authorName={personal_name}
+          authorId={authorId}
+          bookOLID={bookId}
         />
       </Grid>
     </Box>

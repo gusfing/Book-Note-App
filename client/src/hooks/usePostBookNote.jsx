@@ -8,12 +8,13 @@ const usePostBookNote = () => {
   const [error, setError] = useState("");
 
   const postBookNote = async (payload) => {
+    const postResponse = {};
     try {
       setLoading(true);
       setSuccess(false);
       setError("");
 
-      const postResponse = await fetch(`${API_URL}/api/books/notes`, {
+      postResponse = await fetch(`${API_URL}/api/books/notes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -70,11 +70,15 @@ const BookCoverGrid = (props) => {
       <Box className="d-flex gap-2">
         <AddNoteModal
           bookTitle={props.bookTitle}
-          bookAuthor={props.bookAuthor}
+          authorName={props.authorName}
+          authorID={props.authorId}
+          bookOLID={props.bookOLID}
           onSubmit={onSubmit}
-          loading={loading} //will be solved later
+          loading={loading}
         />
       </Box>
+
+      {/* success / error message for good UX */}
       <AutohideSnackbar
         open={snackBar.open}
         message={snackBar.message}
