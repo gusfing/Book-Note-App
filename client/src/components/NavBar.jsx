@@ -72,7 +72,6 @@ const NavBar = () => {
   useEffect(() => {
     const handleOutsidePointer = (e) => {
       if (!searchRef.current?.contains(e.target)) {
-        console.log("Outside pointer useEffect accessed");
         setShowDropdown(false);
       }
     };

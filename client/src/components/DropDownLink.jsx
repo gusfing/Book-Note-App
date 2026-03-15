@@ -14,7 +14,9 @@ const DropDownLink = (props) => {
   const author_name = Array.isArray(rawAuthorName)
     ? rawAuthorName[0]
     : "Unknown Author";
-  const authorKey = Array.isArray(rawAuthorKey) ? rawAuthorKey[0] : "";
+  const authorKey = Array.isArray(rawAuthorKey)
+    ? rawAuthorKey[0]
+    : "Incorrect Format";
   const bookId = bookKey.includes("/works/")
     ? bookKey.split("/").pop()
     : bookKey;
@@ -22,7 +24,9 @@ const DropDownLink = (props) => {
   return (
     <Link
       className="d-flex dropdown-link"
-      to={`/book/${encodeURI(bookId)}?author=${encodeURIComponent(authorKey)}&edition=${encodeURIComponent(cover_edition_key)}`}
+      to={`/book/${encodeURI(bookId)}?author=${encodeURIComponent(
+        authorKey
+      )}&edition=${encodeURIComponent(cover_edition_key)}`}
       onMouseDown={(e) => e.preventDefault()}
       onClick={() => {
         props.setShowDropdown(false);

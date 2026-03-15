@@ -9,10 +9,17 @@ import {
   Typography,
 } from "@mui/material";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const AddNoteModal = (props) => {
   const [open, setOpen] = useState(false);
-  const [note, setNote] = useState(props.note ?? "");
+  const [noteContent, setNoteContent] = useState(props.initialNote ?? "");
+  const [date, setDate] = useState(
+    props.date_read ? dayjs(props.date_read) : dayjs()
+  );
   const [error, setError] = useState("");
 
   const handleOpen = () => setOpen(true);
@@ -24,7 +31,7 @@ const AddNoteModal = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const trimmedNote = note.trim();
+    const trimmedNote = noteContent.trim();
     if (!trimmedNote) {
       setError("Please enter a note before submitting.");
       return;
@@ -32,20 +39,23 @@ const AddNoteModal = (props) => {
 
     console.log("Submitting note:", trimmedNote);
     const response = await props.onSubmit?.({
-      note: trimmedNote,
+      noteContent: trimmedNote,
       bookTitle: props?.bookTitle,
-      bookAuthor: props?.bookAuthor,
+      authorName: props?.authorName,
+      authorID: props?.authorID,
+      bookOLID: props?.bookOLID,
       userName: props?.userName,
+      date_read: date ? date.format("YYYY-MM-DD") : null,
     });
 
     if (response.success) {
-      setNote("");
+      setNoteContent("");
       handleClose();
     }
   };
 
   const handleReset = () => {
-    setNote(props.initialNote ?? "");
+    setNoteContent(props.initialNote ?? "");
     setError("");
   };
 
@@ -74,10 +84,12 @@ const AddNoteModal = (props) => {
               gap: 2,
             }}
           >
+            {/* Stack for book title, author, user name & id */}
             <Stack
               direction={{ xs: "column", sm: "row" }}
               justifyContent="space-between"
               spacing={2}
+              sx={{ borderBottom: "1px solid #757474", paddingBottom: "10px" }}
             >
               <Box>
                 <Typography variant="subtitle2" color="text.secondary">
@@ -94,18 +106,41 @@ const AddNoteModal = (props) => {
                   Author
                 </Typography>
                 <Typography variant="body1">
-                  {props?.bookAuthor || "Unknown Author"}
+                  {props?.authorName || "Unknown Author"}
                 </Typography>
               </Box>
               <Box>
                 <Typography variant="subtitle2" color="text.secondary">
-                  User
+                  User name
                 </Typography>
                 <Typography variant="body1">
                   {props?.userName || "Unknown User"}
                 </Typography>
+                {/* <Typography variant="subtitle2" hidden>
+                  {props.userID ?? 1}
+                </Typography> */}
               </Box>
             </Stack>
+
+            {/* Date picker for book read */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="When did you read it?"
+                disableFuture
+                value={date}
+                onChange={(newValue) => {
+                  setDate(newValue);
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: "MM/DD/YYYY",
+                  },
+                }}
+                required
+              />
+            </LocalizationProvider>
+
+            {/* Book note field */}
             <TextField
               id="book-note"
               name="note"
@@ -113,19 +148,21 @@ const AddNoteModal = (props) => {
               placeholder="Write your thoughts about the book..."
               multiline
               minRows={8}
-              maxRows={15}
+              maxRows={12}
               fullWidth
               required
-              value={note}
+              value={noteContent}
               onChange={(event) => {
-                setNote(event.target.value);
+                setNoteContent(event.target.value);
                 if (error) {
                   setError("");
                 }
               }}
               error={Boolean(error)}
-              helperText={error || `${note.trim().length} characters`}
+              helperText={error || `${noteContent.trim().length} characters`}
             />
+
+            {/* Guided buttons */}
             <Stack direction="row" spacing={2} justifyContent="flex-end">
               <Button variant="outlined" color="inherit" onClick={handleReset}>
                 Reset

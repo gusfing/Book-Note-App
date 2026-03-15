@@ -38,9 +38,9 @@ const BookCoverGrid = (props) => {
         <Box>
           <p
             ref={descriptionRef}
-            className={`book-description${canExpand && !isExpanded ? "--expandable" : ""}${
-              isExpanded ? "--expanded" : ""
-            }`.trim()}
+            className={`book-description${
+              canExpand && !isExpanded ? "--expandable" : ""
+            }${isExpanded ? "--expanded" : ""}`.trim()}
           >
             {props.descriptionText}
           </p>
@@ -71,7 +71,7 @@ const BookCoverGrid = (props) => {
           <span>Publisher</span>
           <a
             href={`https://openlibrary.org/publishers/${encodeURIComponent(
-              props.publishers[0] || "Unknown Publisher",
+              props.publishers[0] || "Unknown Publisher"
             )}`}
             target="_blank"
             rel="noopener noreferrer"
