@@ -8,7 +8,7 @@ const usePostBookNote = () => {
   const [error, setError] = useState("");
 
   const postBookNote = async (payload) => {
-    const postResponse = {};
+    let postResponse = {};
     try {
       setLoading(true);
       setSuccess(false);
